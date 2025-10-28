@@ -1,0 +1,19 @@
+{
+  "name": "capsulas-ecommerce-store",
+  "version": "1.0.0",
+  "description": "Complete e-commerce store built with Capsulas Framework",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["capsulas", "ecommerce", "store", "stripe", "cart"],
+  "author": "hublab.dev <info@hublab.dev>",
+  "license": "MIT",
+  "dependencies": {
+    "@capsulas/capsules": "file:../../packages/capsules"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0"
+  }
+}
