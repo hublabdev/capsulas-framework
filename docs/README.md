@@ -5,9 +5,9 @@ Welcome to the Capsulas framework documentation. This guide will help you build,
 ## Quick Navigation
 
 ### For Users
+- **[Getting Started](./GETTING_STARTED.md)** - ⭐ **START HERE** - Build your first app in 10 minutes
 - [FAQ](./FAQ.md) - Frequently asked questions
 - [Deployment Guide](./DEPLOYMENT_GUIDE.md) - Deploy to any platform
-- [Getting Started](#getting-started) - First steps
 
 ### For AI Assistants
 - [AI Assistant Guide](./AI_ASSISTANT_GUIDE.md) - **START HERE** if you're an AI helping with Capsulas code
