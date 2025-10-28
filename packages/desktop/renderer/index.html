@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capsulas - Visual Flow Editor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --bg-primary: #fafafa;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f5f5f5;
+            --border-light: #e8e8e8;
+            --border-medium: #d4d4d4;
+            --text-primary: #0a0a0a;
+            --text-secondary: #666666;
+            --text-tertiary: #999999;
+            --accent: #0066ff;
+            --accent-hover: #0052cc;
+            --accent-light: #e6f0ff;
+            --success: #00c853;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12);
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-light);
+            padding: 14px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(20px);
+            z-index: 100;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .logo {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.01em;
+        }
+
+        .divider {
+            width: 1px;
+            height: 16px;
+            background: var(--border-light);
+        }
+
+        .project-name {
+            font-size: 13px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: -0.01em;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--border-medium);
+            color: var(--text-primary);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            height: calc(100vh - 58px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-light);
+            overflow-y: auto;
+            padding: 20px 16px;
+        }
+
+        .sidebar-title {
+            color: var(--text-tertiary);
+            font-size: 11px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            padding: 0 8px;
+        }
+
+        .capsule-library {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .capsule-item {
+            background: var(--bg-primary);
+            border: 1px solid transparent;
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            cursor: grab;
+            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            user-select: none;
+        }
+
+        .capsule-item:active {
+            cursor: grabbing;
+        }
+
+        .capsule-item:hover {
+            border-color: var(--border-medium);
+            background: var(--bg-secondary);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .capsule-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+
+        .capsule-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            flex-shrink: 0;
+        }
+
+        .capsule-name {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: -0.01em;
+        }
+
+        .capsule-desc {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            margin-left: 42px;
+            line-height: 1.4;
+        }
+
+        /* Canvas Area */
+        .canvas-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-primary);
+            background-image:
+                radial-gradient(circle, var(--border-light) 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+
+        .canvas {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            cursor: grab;
+        }
+
+        .canvas.panning {
+            cursor: grabbing;
+        }
+
+        /* Node */
+        .node {
+            position: absolute;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            min-width: 220px;
+            cursor: move;
+            box-shadow: var(--shadow-md);
+            user-select: none;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .node:hover {
+            box-shadow: var(--shadow-lg);
+        }
+
+        .node.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light), var(--shadow-lg);
+        }
+
+        .node.executing {
+            border-color: var(--success);
+            animation: pulse-node 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse-node {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(0, 200, 83, 0.4), var(--shadow-lg);
+            }
+            50% {
+                box-shadow: 0 0 0 6px rgba(0, 200, 83, 0), var(--shadow-lg);
+            }
+        }
+
+        .node-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .node-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .node-title {
+            flex: 1;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 13px;
+            letter-spacing: -0.01em;
+        }
+
+        .node-delete {
+            background: transparent;
+            color: var(--text-tertiary);
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.15s;
+        }
+
+        .node:hover .node-delete {
+            opacity: 1;
+        }
+
+        .node-delete:hover {
+            background: #fee;
+            color: #d32f2f;
+        }
+
+        .node-content {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Ports */
+        .port {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--text-secondary);
+            user-select: none;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: 500;
+        }
+
+        .port-input {
+            left: -6px;
+            flex-direction: row;
+        }
+
+        .port-output {
+            right: -6px;
+            flex-direction: row-reverse;
+            text-align: right;
+        }
+
+        .port-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid var(--bg-secondary);
+            background: var(--bg-primary);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            box-shadow: 0 0 0 1px var(--border-medium);
+        }
+
+        .port:hover .port-dot {
+            transform: scale(1.3);
+            box-shadow: 0 0 0 2px var(--accent), 0 0 12px rgba(0, 102, 255, 0.3);
+            background: white;
+        }
+
+        .port.compatible .port-dot {
+            animation: pulse-port 1s ease-in-out infinite;
+            box-shadow: 0 0 0 2px var(--success);
+        }
+
+        .port.incompatible {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        @keyframes pulse-port {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+        }
+
+        .port-label {
+            opacity: 0;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: 4px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .port:hover .port-label,
+        .port.compatible .port-label {
+            opacity: 1;
+        }
+
+        /* SVG Connections */
+        #connections-svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .connection-line {
+            fill: none;
+            stroke: var(--border-medium);
+            stroke-width: 2;
+            pointer-events: stroke;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .connection-line:hover {
+            stroke: var(--accent);
+            stroke-width: 2.5;
+        }
+
+        /* Right Panel */
+        .right-panel {
+            width: 360px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--border-light);
+            display: none;
+            flex-direction: column;
+        }
+
+        .right-panel.visible {
+            display: flex;
+        }
+
+        .panel-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .panel-node-info {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .panel-node-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            background: var(--accent-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .panel-node-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+            letter-spacing: -0.01em;
+        }
+
+        .panel-node-desc {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .panel-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-light);
+            background: var(--bg-tertiary);
+        }
+
+        .panel-tab {
+            flex: 1;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            color: var(--text-tertiary);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            border-bottom: 2px solid transparent;
+            transition: all 0.15s;
+            font-family: inherit;
+        }
+
+        .panel-tab:hover {
+            color: var(--text-secondary);
+            background: var(--bg-primary);
+        }
+
+        .panel-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+            background: var(--bg-secondary);
+        }
+
+        .panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .tab-pane {
+            display: none;
+        }
+
+        .tab-pane.active {
+            display: block;
+        }
+
+        .panel-section {
+            margin-bottom: 24px;
+        }
+
+        .panel-section-title {
+            color: var(--text-secondary);
+            font-weight: 600;
+            margin-bottom: 12px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+        }
+
+        .config-field {
+            margin-bottom: 16px;
+        }
+
+        .config-label {
+            color: var(--text-secondary);
+            font-size: 12px;
+            margin-bottom: 6px;
+            display: block;
+            font-weight: 500;
+        }
+
+        .config-input,
+        .config-select,
+        .config-textarea {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-family: inherit;
+            transition: all 0.15s;
+        }
+
+        .config-textarea {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+        }
+
+        .config-input:focus,
+        .config-select:focus,
+        .config-textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-light);
+        }
+
+        .config-checkbox {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            transition: background 0.15s;
+        }
+
+        .config-checkbox:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .config-checkbox input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            accent-color: var(--accent);
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+
+        .info-value {
+            color: var(--text-primary);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .badge-info {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+
+        /* Code Preview */
+        .code-preview {
+            background: #fafafa;
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            font-family: 'SF Mono', 'Monaco', 'Courier New', monospace;
+            font-size: 11px;
+            color: var(--text-primary);
+            max-height: 400px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            line-height: 1.6;
+        }
+
+        /* Stats Bar */
+        .stats-bar {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-light);
+            display: flex;
+            gap: 20px;
+            color: var(--text-secondary);
+            font-size: 12px;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stat-value {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        /* Empty State */
+        .empty-state {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-tertiary);
+            pointer-events: none;
+            max-width: 320px;
+        }
+
+        .empty-state-icon {
+            width: 64px;
+            height: 64px;
+            margin: 0 auto 16px;
+            border-radius: var(--radius-lg);
+            background: var(--bg-tertiary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+        }
+
+        .empty-state-text {
+            font-size: 15px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .empty-state-hint {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-medium);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-tertiary);
+        }
+
+        /* Minimap */
+        .minimap {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 200px;
+            height: 140px;
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid var(--border-light);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            z-index: 50;
+            backdrop-filter: blur(20px);
+            box-shadow: var(--shadow-md);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="logo">Capsulas</div>
+            <div class="divider"></div>
+            <div class="project-name">Untitled Project</div>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="clearCanvas()">Clear</button>
+            <button class="btn btn-secondary" onclick="togglePanel()">Settings</button>
+            <button class="btn btn-primary" onclick="executeFlow()">Run Flow</button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-title">Capsules</div>
+            <div class="capsule-library" id="capsuleLibrary">
+                <!-- Populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- Canvas Area -->
+        <div class="canvas-container">
+            <svg id="connections-svg"></svg>
+            <div class="canvas" id="canvas">
+                <div class="empty-state">
+                    <div class="empty-state-icon">+</div>
+                    <div class="empty-state-text">Drag capsules to start</div>
+                    <div class="empty-state-hint">Connect them to build your workflow</div>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="stats-bar">
+                <div class="stat-item">
+                    <span>Nodes</span>
+                    <span class="stat-value" id="nodeCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Connections</span>
+                    <span class="stat-value" id="connectionCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span>Zoom</span>
+                    <span class="stat-value" id="zoomLevel">100%</span>
+                </div>
+            </div>
+
+            <!-- Minimap -->
+            <div class="minimap" id="minimap"></div>
+        </div>
+
+        <!-- Right Panel -->
+        <div class="right-panel" id="rightPanel">
+            <div class="panel-header">
+                <div class="panel-node-info">
+                    <span class="panel-node-icon" id="panelNodeIcon">+</span>
+                    <div>
+                        <div class="panel-node-name" id="panelNodeName">Select a node</div>
+                        <div class="panel-node-desc" id="panelNodeDesc">Click on a node to view its configuration</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel-tabs">
+                <button class="panel-tab active" onclick="switchTab('parameters')">Parameters</button>
+                <button class="panel-tab" onclick="switchTab('settings')">Settings</button>
+                <button class="panel-tab" onclick="switchTab('output')">Output</button>
+                <button class="panel-tab" onclick="switchTab('code')">Code</button>
+            </div>
+
+            <div class="panel-content">
+                <!-- Parameters Tab -->
+                <div class="tab-pane active" id="tab-parameters">
+                    <div id="nodeParameters">
+                        <p style="color: var(--text-tertiary); font-size: 13px;">Select a node to configure parameters</p>
+                    </div>
+                </div>
+
+                <!-- Settings Tab -->
+                <div class="tab-pane" id="tab-settings">
+                    <div class="panel-section">
+                        <div class="panel-section-title">General</div>
+                        <div id="nodeSettings">
+                            <div class="config-field">
+                                <label class="config-label">Node Name</label>
+                                <input type="text" class="config-input" id="nodeName" placeholder="My Node">
+                            </div>
+
+                            <div class="config-field">
+                                <label class="config-label">Notes</label>
+                                <textarea class="config-textarea" id="nodeNotes" placeholder="Add notes about this node..."></textarea>
+                            </div>
+
+                            <div class="config-field">
+                                <label class="config-label">Execution Options</label>
+                                <div class="config-checkbox">
+                                    <input type="checkbox" id="continueOnFail">
+                                    <label class="config-label" style="margin: 0;">Continue on error</label>
+                                </div>
+                                <div class="config-checkbox">
+                                    <input type="checkbox" id="alwaysOutputData">
+                                    <label class="config-label" style="margin: 0;">Always output data</label>
+                                </div>
+                                <div class="config-checkbox">
+                                    <input type="checkbox" id="retryOnFail">
+                                    <label class="config-label" style="margin: 0;">Retry on failure</label>
+                                </div>
+                            </div>
+
+                            <div class="config-field">
+                                <label class="config-label">Timeout (ms)</label>
+                                <input type="number" class="config-input" id="nodeTimeout" value="5000">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Output Tab -->
+                <div class="tab-pane" id="tab-output">
+                    <div class="panel-section">
+                        <div class="panel-section-title">Node Info</div>
+                        <div id="nodeInfo">
+                            <div class="info-row">
+                                <span class="info-label">Node ID</span>
+                                <span class="info-value" id="infoNodeId">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Capsule Type</span>
+                                <span class="info-value" id="infoCapsuleType">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Status</span>
+                                <span class="info-value"><span class="badge badge-success">Active</span></span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Input Connections</span>
+                                <span class="info-value" id="infoInputs">0</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Output Connections</span>
+                                <span class="info-value" id="infoOutputs">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel-section">
+                        <div class="panel-section-title">Data Preview</div>
+                        <div class="code-preview" id="dataPreview">{
+  "status": "ready",
+  "data": null
+}</div>
+                    </div>
+                </div>
+
+                <!-- Code Tab -->
+                <div class="tab-pane" id="tab-code">
+                    <div class="panel-section">
+                        <div class="panel-section-title">Generated Code</div>
+                        <div class="code-preview" id="codePreview">// Code will appear here</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="port-handlers.js"></script>
+    <script src="code-generator-improved.js"></script>
+    <script src="flow-editor.js"></script>
+    <script src="desktop-integration.js"></script>
+</body>
+</html>

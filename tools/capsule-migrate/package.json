@@ -1,0 +1,51 @@
+{
+  "name": "@capsulas/migrate",
+  "version": "1.0.0",
+  "description": "Automated migration tool for Capsulas Framework - migrates capsules to standardized 8-file architecture",
+  "main": "dist/index.js",
+  "bin": {
+    "capsule-migrate": "dist/cli/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:parser": "node dist/test/test-parser.js",
+    "test:generator": "node dist/test/test-generator.js",
+    "migrate": "node dist/cli/index.js migrate",
+    "analyze": "node dist/cli/index.js analyze",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write src/**/*.ts"
+  },
+  "keywords": [
+    "capsulas",
+    "migration",
+    "code-generation",
+    "ast",
+    "typescript"
+  ],
+  "author": "Capsulas Framework",
+  "license": "MIT",
+  "dependencies": {
+    "typescript": "^5.3.3",
+    "@typescript-eslint/parser": "^6.21.0",
+    "commander": "^11.1.0",
+    "inquirer": "^9.2.12",
+    "chalk": "^5.3.0",
+    "ora": "^7.0.1",
+    "handlebars": "^4.7.8",
+    "prettier": "^3.1.1",
+    "eslint": "^8.56.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.5",
+    "@types/inquirer": "^9.0.7",
+    "@types/handlebars": "^4.1.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "vitest": "^1.2.0",
+    "ts-node": "^10.9.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "target": "ES2020",
+    "outDir": "./dist",
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/index.ts",
+    "src/payments/**/*",
+    "src/state/**/*",
+    "src/router/**/*",
+    "src/form-builder/**/*",
+    "src/theme/**/*",
+    "src/oauth/**/*",
+    "src/i18n/**/*",
+    "src/geolocation/**/*",
+    "src/database/**/*",
+    "src/analytics/**/*",
+    "src/notifications/**/*",
+    "src/storage/**/*",
+    "src/websocket/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "**/__tests__/**",
+    "**/*.test.ts",
+    "**/*.spec.ts"
+  ]
+}

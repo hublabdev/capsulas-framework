@@ -1,0 +1,73 @@
+{
+  "name": "capsulas-framework",
+  "version": "2.0.2",
+  "description": "Production-ready modular JavaScript library with 13 essential capsules: Payments, State, Router, Form-Builder, Theme, OAuth, i18n, Geolocation, Database, Analytics, Notifications, Storage, and WebSocket",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "module": "dist/index.js",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "build:check": "tsc --project tsconfig.build.json --noEmit",
+    "dev": "tsc --project tsconfig.build.json --watch",
+    "clean": "rm -rf dist",
+    "prebuild": "npm run clean",
+    "test": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "capsulas",
+    "capsules",
+    "modules",
+    "framework",
+    "typescript",
+    "javascript",
+    "payments",
+    "stripe",
+    "paypal",
+    "oauth",
+    "authentication",
+    "state-management",
+    "routing",
+    "forms",
+    "theming",
+    "i18n",
+    "internationalization",
+    "geolocation",
+    "modular",
+    "microservices"
+  ],
+  "author": "Capsulas Contributors",
+  "license": "MIT",
+  "homepage": "https://github.com/capsulas/capsulas-framework#readme",
+  "bugs": {
+    "url": "https://github.com/capsulas/capsulas-framework/issues"
+  },
+  "dependencies": {
+    "tslib": "^2.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "jest": "^29.7.0",
+    "eslint": "^8.55.0"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/capsulas/capsulas-framework.git",
+    "directory": "packages/capsules"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

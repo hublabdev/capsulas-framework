@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capsulas Integration Demo - Social Media App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 1px solid #333;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #00ff00;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .capsules-list {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+            font-size: 0.8rem;
+        }
+
+        .capsule {
+            background: #1a1a1a;
+            padding: 10px;
+            border: 1px solid #333;
+            text-align: center;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin: 30px 0 20px;
+            border-bottom: 1px solid #333;
+        }
+
+        .tab {
+            padding: 10px 20px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            border-bottom: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #252525;
+        }
+
+        .tab.active {
+            background: #00ff00;
+            color: #000;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #1a1a1a;
+            border: 1px solid #333;
+            color: #e0e0e0;
+            font-family: 'IBM Plex Mono', monospace;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #00ff00;
+        }
+
+        button {
+            padding: 12px 24px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-family: 'IBM Plex Mono', monospace;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background: #00cc00;
+        }
+
+        button:disabled {
+            background: #333;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .post {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+        }
+
+        .post-author {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .post-date {
+            color: #666;
+            font-size: 0.8rem;
+        }
+
+        .post-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: #fff;
+        }
+
+        .post-content {
+            color: #ccc;
+            margin-bottom: 15px;
+        }
+
+        .post-image {
+            max-width: 100%;
+            margin-top: 15px;
+        }
+
+        .status {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-left: 3px solid #00ff00;
+            background: #1a1a1a;
+        }
+
+        .status.error {
+            border-color: #ff0000;
+            color: #ff6666;
+        }
+
+        .status.success {
+            border-color: #00ff00;
+            color: #66ff66;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 1px solid #333;
+            padding: 20px;
+        }
+
+        .stat-title {
+            color: #00ff00;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            color: #fff;
+        }
+
+        .capsule-stats {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background: #333;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            cursor: pointer;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #00ff00;
+            width: 0%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 CAPSULAS INTEGRATION DEMO</h1>
+            <p class="subtitle">Full-Stack Social Media App</p>
+            <div class="capsules-list">
+                <div class="capsule">♔ JWT Auth</div>
+                <div class="capsule">♜ Encryption</div>
+                <div class="capsule">⭡ File Upload</div>
+                <div class="capsule">╩ Storage</div>
+                <div class="capsule">⌘ Email</div>
+                <div class="capsule">✓ Validator</div>
+                <div class="capsule">▤ Logger</div>
+                <div class="capsule">◰ Cache</div>
+                <div class="capsule">≋ HTTP</div>
+            </div>
+        </header>
+
+        <div id="status" class="status hidden"></div>
+
+        <!-- Login/Register Section -->
+        <div id="auth-section">
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('login')">Login</div>
+                <div class="tab" onclick="switchTab('register')">Register</div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="login-tab" class="tab-content active">
+                <form id="login-form" onsubmit="handleLogin(event)">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="login-email" required placeholder="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="login-password" required placeholder="********">
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+            </div>
+
+            <!-- Register Form -->
+            <div id="register-tab" class="tab-content">
+                <form id="register-form" onsubmit="handleRegister(event)">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" id="register-name" required placeholder="John Doe">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="register-email" required placeholder="user@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password (min 8 characters)</label>
+                        <input type="password" id="register-password" required placeholder="********">
+                    </div>
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Main App Section (hidden until logged in) -->
+        <div id="app-section" class="hidden">
+            <div class="tabs">
+                <div class="tab active" onclick="switchAppTab('posts')">Posts</div>
+                <div class="tab" onclick="switchAppTab('create')">Create Post</div>
+                <div class="tab" onclick="switchAppTab('profile')">Profile</div>
+                <div class="tab" onclick="switchAppTab('stats')">Statistics</div>
+                <div class="tab" onclick="logout()">Logout</div>
+            </div>
+
+            <!-- Posts Tab -->
+            <div id="posts-tab" class="tab-content active">
+                <h2 style="margin: 20px 0;">All Posts</h2>
+                <div id="posts-container"></div>
+            </div>
+
+            <!-- Create Post Tab -->
+            <div id="create-tab" class="tab-content">
+                <h2 style="margin: 20px 0;">Create New Post</h2>
+                <form id="create-post-form" onsubmit="handleCreatePost(event)">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="post-title" required placeholder="Post title...">
+                    </div>
+                    <div class="form-group">
+                        <label>Content</label>
+                        <textarea id="post-content" rows="5" required placeholder="What's on your mind?"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>Image (optional)</label>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-button" for="post-image">Choose Image</label>
+                            <input type="file" id="post-image" accept="image/*" onchange="updateFileName(this)">
+                        </div>
+                        <span id="file-name" style="margin-left: 10px; color: #888;"></span>
+                    </div>
+                    <button type="submit">Create Post</button>
+                </form>
+            </div>
+
+            <!-- Profile Tab -->
+            <div id="profile-tab" class="tab-content">
+                <h2 style="margin: 20px 0;">Your Profile</h2>
+                <div id="user-info"></div>
+                <form id="profile-pic-form" onsubmit="handleUploadProfilePic(event)" style="margin-top: 30px;">
+                    <div class="form-group">
+                        <label>Upload Profile Picture</label>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-button" for="profile-picture">Choose Picture</label>
+                            <input type="file" id="profile-picture" accept="image/*" onchange="updateFileName(this, 'profile-file-name')">
+                        </div>
+                        <span id="profile-file-name" style="margin-left: 10px; color: #888;"></span>
+                    </div>
+                    <button type="submit">Upload</button>
+                </form>
+            </div>
+
+            <!-- Stats Tab -->
+            <div id="stats-tab" class="tab-content">
+                <h2 style="margin: 20px 0;">Application Statistics</h2>
+                <button onclick="loadStats()">Refresh Stats</button>
+                <div id="stats-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:4000/api';
+        let currentUser = null;
+        let authToken = null;
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('#auth-section .tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('#auth-section .tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+        }
+
+        function switchAppTab(tab) {
+            document.querySelectorAll('#app-section .tab').forEach(t => {
+                if (t.textContent !== 'Logout') t.classList.remove('active');
+            });
+            document.querySelectorAll('#app-section .tab-content').forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(`${tab}-tab`).classList.add('active');
+
+            if (tab === 'posts') loadPosts();
+            if (tab === 'stats') loadStats();
+            if (tab === 'profile') loadProfile();
+        }
+
+        function updateFileName(input, targetId = 'file-name') {
+            const fileName = input.files[0]?.name || '';
+            document.getElementById(targetId).textContent = fileName;
+        }
+
+        function showStatus(message, type = 'success') {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = `status ${type}`;
+            status.classList.remove('hidden');
+            setTimeout(() => status.classList.add('hidden'), 5000);
+        }
+
+        // Authentication
+        async function handleRegister(e) {
+            e.preventDefault();
+            const name = document.getElementById('register-name').value;
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    currentUser = data.user;
+                    authToken = data.tokens.accessToken;
+                    showStatus('Registration successful! Welcome!', 'success');
+                    showApp();
+                } else {
+                    showStatus(data.error || 'Registration failed', 'error');
+                }
+            } catch (error) {
+                showStatus('Registration failed: ' + error.message, 'error');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+
+            try {
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    currentUser = data.user;
+                    authToken = data.tokens.accessToken;
+                    showStatus('Login successful!', 'success');
+                    showApp();
+                } else {
+                    showStatus(data.error || 'Login failed', 'error');
+                }
+            } catch (error) {
+                showStatus('Login failed: ' + error.message, 'error');
+            }
+        }
+
+        async function logout() {
+            try {
+                await fetch(`${API_URL}/auth/logout`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+
+            currentUser = null;
+            authToken = null;
+            document.getElementById('auth-section').classList.remove('hidden');
+            document.getElementById('app-section').classList.add('hidden');
+            showStatus('Logged out successfully', 'success');
+        }
+
+        function showApp() {
+            document.getElementById('auth-section').classList.add('hidden');
+            document.getElementById('app-section').classList.remove('hidden');
+            loadPosts();
+            loadProfile();
+        }
+
+        // Posts
+        async function loadPosts() {
+            try {
+                const response = await fetch(`${API_URL}/posts`);
+                const data = await response.json();
+
+                const container = document.getElementById('posts-container');
+                if (data.posts.length === 0) {
+                    container.innerHTML = '<p style="color: #666;">No posts yet. Be the first to post!</p>';
+                    return;
+                }
+
+                container.innerHTML = data.posts.map(post => `
+                    <div class="post">
+                        <div class="post-header">
+                            <span class="post-author">${post.author}</span>
+                            <span class="post-date">${new Date(post.createdAt).toLocaleString()}</span>
+                        </div>
+                        <div class="post-title">${post.title}</div>
+                        <div class="post-content">${post.content}</div>
+                        ${post.image ? `<img src="${post.image.url}" class="post-image" alt="${post.title}">` : ''}
+                    </div>
+                `).join('');
+            } catch (error) {
+                showStatus('Failed to load posts', 'error');
+            }
+        }
+
+        async function handleCreatePost(e) {
+            e.preventDefault();
+            const title = document.getElementById('post-title').value;
+            const content = document.getElementById('post-content').value;
+            const image = document.getElementById('post-image').files[0];
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            if (image) formData.append('image', image);
+
+            try {
+                const response = await fetch(`${API_URL}/posts`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showStatus('Post created successfully!', 'success');
+                    document.getElementById('create-post-form').reset();
+                    document.getElementById('file-name').textContent = '';
+                    switchAppTab('posts');
+                    loadPosts();
+                } else {
+                    showStatus(data.error || 'Failed to create post', 'error');
+                }
+            } catch (error) {
+                showStatus('Failed to create post: ' + error.message, 'error');
+            }
+        }
+
+        // Profile
+        function loadProfile() {
+            const container = document.getElementById('user-info');
+            container.innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-title">Name</div>
+                    <div class="stat-value">${currentUser.name}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">Email</div>
+                    <div class="stat-value" style="font-size: 1.2rem;">${currentUser.email}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-title">User ID</div>
+                    <div class="stat-value" style="font-size: 0.9rem;">${currentUser.id}</div>
+                </div>
+            `;
+        }
+
+        async function handleUploadProfilePic(e) {
+            e.preventDefault();
+            const file = document.getElementById('profile-picture').files[0];
+            if (!file) {
+                showStatus('Please select a file', 'error');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('picture', file);
+
+            try {
+                const response = await fetch(`${API_URL}/user/profile-picture`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${authToken}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    showStatus('Profile picture uploaded successfully!', 'success');
+                    document.getElementById('profile-pic-form').reset();
+                    document.getElementById('profile-file-name').textContent = '';
+                } else {
+                    showStatus(data.error || 'Upload failed', 'error');
+                }
+            } catch (error) {
+                showStatus('Upload failed: ' + error.message, 'error');
+            }
+        }
+
+        // Statistics
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_URL}/stats`, {
+                    headers: { 'Authorization': `Bearer ${authToken}` }
+                });
+
+                const data = await response.json();
+                if (!data.success) return;
+
+                const container = document.getElementById('stats-container');
+                const stats = data.stats;
+
+                container.innerHTML = `
+                    <h3 style="margin: 20px 0; color: #00ff00;">Application Stats</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">Total Users</div>
+                            <div class="stat-value">${stats.app.totalUsers}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Total Posts</div>
+                            <div class="stat-value">${stats.app.totalPosts}</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Uptime</div>
+                            <div class="stat-value">${Math.floor(stats.app.uptime)}s</div>
+                        </div>
+                    </div>
+
+                    <h3 style="margin: 30px 0 20px; color: #00ff00;">Capsulas Performance</h3>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-title">♔ JWT Auth</div>
+                            <div class="capsule-stats">
+                                Signed: ${stats.capsulas.auth.totalSigned}<br>
+                                Verified: ${stats.capsulas.auth.totalVerified}<br>
+                                Refreshed: ${stats.capsulas.auth.totalRefreshed}
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">⭡ File Upload</div>
+                            <div class="capsule-stats">
+                                Uploads: ${stats.capsulas.fileUpload.totalUploads}<br>
+                                Failed: ${stats.capsulas.fileUpload.failedUploads}<br>
+                                Avg Time: ${stats.capsulas.fileUpload.averageUploadTime}ms
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">◰ Cache</div>
+                            <div class="capsule-stats">
+                                Hits: ${stats.capsulas.cache.hits}<br>
+                                Misses: ${stats.capsulas.cache.misses}<br>
+                                Hit Rate: ${stats.capsulas.cache.hitRate}%
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">▤ Logger</div>
+                            <div class="capsule-stats">
+                                Total Logs: ${stats.capsulas.logger.totalLogs}<br>
+                                Errors: ${stats.capsulas.logger.errorCount}<br>
+                                Warnings: ${stats.capsulas.logger.warnCount}
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">⌘ Email</div>
+                            <div class="capsule-stats">
+                                Sent: ${stats.capsulas.email.totalSent}<br>
+                                Failed: ${stats.capsulas.email.totalFailed}<br>
+                                Success Rate: ${stats.capsulas.email.successRate}%
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">╩ Storage</div>
+                            <div class="capsule-stats">
+                                Uploads: ${stats.capsulas.storage.totalUploads}<br>
+                                Downloads: ${stats.capsulas.storage.totalDownloads}<br>
+                                Bytes: ${Math.round(stats.capsulas.storage.bytesUploaded / 1024)}KB
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } catch (error) {
+                showStatus('Failed to load stats', 'error');
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "name": "@capsulas/web",
+  "version": "0.1.0",
+  "description": "Visual flow editor for Capsulas framework",
+  "main": "server.cjs",
+  "scripts": {
+    "dev": "node server.cjs",
+    "start": "node server.cjs"
+  },
+  "keywords": [
+    "capsulas",
+    "visual-editor",
+    "flow-editor",
+    "low-code"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "files": [
+    "*.html",
+    "*.js",
+    "*.cjs",
+    "*.css"
+  ]
+}
