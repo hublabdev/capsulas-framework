@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/yourusername/capsulas.git"
+    "url": "https://github.com/hublabdev/capsulas-framework.git"
   },
   "keywords": [
     "visual-programming",
@@ -43,12 +43,14 @@
     "workflow",
     "automation",
     "typescript",
-    "framework"
+    "framework",
+    "modular",
+    "capsules"
   ],
-  "author": "Your Name",
+  "author": "HubLab Dev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yourusername/capsulas/issues"
+    "url": "https://github.com/hublabdev/capsulas-framework/issues"
   },
-  "homepage": "https://github.com/yourusername/capsulas#readme"
+  "homepage": "https://github.com/hublabdev/capsulas-framework#readme"
 }
