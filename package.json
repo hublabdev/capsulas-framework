@@ -47,7 +47,7 @@
     "modular",
     "capsules"
   ],
-  "author": "HubLab Dev",
+  "author": "hublab.dev <info@hublab.dev>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/hublabdev/capsulas-framework/issues"
