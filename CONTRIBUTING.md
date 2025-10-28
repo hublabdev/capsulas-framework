@@ -10,7 +10,7 @@ By participating in this project, you agree to maintain a respectful and inclusi
 
 ### Reporting Bugs
 
-1. Check if the bug has already been reported in [Issues](https://github.com/yourusername/capsulas/issues)
+1. Check if the bug has already been reported in [Issues](https://github.com/hublabdev/capsulas-framework/issues)
 2. If not, create a new issue with:
    - Clear title and description
    - Steps to reproduce
@@ -20,7 +20,7 @@ By participating in this project, you agree to maintain a respectful and inclusi
 
 ### Suggesting Features
 
-1. Check existing [Feature Requests](https://github.com/yourusername/capsulas/issues?q=label%3Aenhancement)
+1. Check existing [Feature Requests](https://github.com/hublabdev/capsulas-framework/issues?q=label%3Aenhancement)
 2. Create a new issue with:
    - Clear use case
    - Proposed solution
@@ -64,8 +64,8 @@ One of the best ways to contribute is by creating new capsules!
 
 ```bash
 # Clone your fork
-git clone https://github.com/YOUR_USERNAME/capsulas.git
-cd capsulas
+git clone https://github.com/YOUR_USERNAME/capsulas-framework.git
+cd capsulas-framework
 
 # Install dependencies
 npm install
@@ -126,17 +126,21 @@ capsulas-framework/
 
 ## Release Process
 
-1. Update version in package.json
-2. Update CHANGELOG.md
-3. Create git tag: `git tag v0.1.0`
-4. Push tag: `git push origin v0.1.0`
-5. GitHub Actions will handle npm publish
+Releases are managed by maintainers. If you want to suggest a release:
+
+1. Open an issue describing what should be included
+2. Maintainers will:
+   - Update version in package.json
+   - Update CHANGELOG.md
+   - Create and push git tag
+   - Create GitHub release with notes
 
 ## Getting Help
 
-- 💬 [Discord](https://discord.gg/capsulas)
-- 📧 Email: support@capsulas.dev
-- 📝 [Discussions](https://github.com/yourusername/capsulas/discussions)
+- 💬 Discord (coming soon)
+- 📧 Email: info@hublab.dev
+- 🐛 [GitHub Issues](https://github.com/hublabdev/capsulas-framework/issues)
+- 📖 [Documentation](./docs/README.md)
 
 ## Recognition
 
