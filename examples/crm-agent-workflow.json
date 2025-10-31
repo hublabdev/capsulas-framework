@@ -1,0 +1,264 @@
+{
+  "id": "crm-agent-hubspot",
+  "name": "CRM Agent - HubSpot Automation",
+  "description": "Automated CRM workflow that syncs contacts, creates deals, and sends notifications",
+  "version": "1.0.0",
+  "metadata": {
+    "created": "2025-10-29T00:00:00.000Z",
+    "updated": "2025-10-29T00:00:00.000Z",
+    "author": "HubLab",
+    "tags": ["crm", "automation", "hubspot", "sales"]
+  },
+  "nodes": [
+    {
+      "id": "webhook-1",
+      "capsule": {
+        "id": "webhook",
+        "name": "Webhook",
+        "icon": "⌘"
+      },
+      "position": { "x": 100, "y": 200 },
+      "config": {
+        "method": "POST",
+        "path": "/api/webhook/contact",
+        "authentication": "api_key"
+      }
+    },
+    {
+      "id": "validator-1",
+      "capsule": {
+        "id": "validator",
+        "name": "Validator",
+        "icon": "✓"
+      },
+      "position": { "x": 350, "y": 200 },
+      "config": {
+        "schema": {
+          "email": { "type": "string", "format": "email", "required": true },
+          "name": { "type": "string", "required": true },
+          "company": { "type": "string", "required": false },
+          "phone": { "type": "string", "required": false }
+        }
+      }
+    },
+    {
+      "id": "database-1",
+      "capsule": {
+        "id": "database",
+        "name": "Database",
+        "icon": "╦"
+      },
+      "position": { "x": 600, "y": 100 },
+      "config": {
+        "type": "postgres",
+        "operation": "query",
+        "query": "SELECT * FROM contacts WHERE email = $1"
+      }
+    },
+    {
+      "id": "router-1",
+      "capsule": {
+        "id": "router",
+        "name": "Router",
+        "icon": "⊚"
+      },
+      "position": { "x": 850, "y": 200 },
+      "config": {
+        "condition": "contact_exists",
+        "routes": {
+          "true": "database-2",
+          "false": "database-3"
+        }
+      }
+    },
+    {
+      "id": "database-2",
+      "capsule": {
+        "id": "database",
+        "name": "Database",
+        "icon": "╦"
+      },
+      "position": { "x": 1100, "y": 100 },
+      "config": {
+        "type": "postgres",
+        "operation": "execute",
+        "query": "UPDATE contacts SET name = $1, company = $2, updated_at = NOW() WHERE email = $3"
+      }
+    },
+    {
+      "id": "database-3",
+      "capsule": {
+        "id": "database",
+        "name": "Database",
+        "icon": "╦"
+      },
+      "position": { "x": 1100, "y": 300 },
+      "config": {
+        "type": "postgres",
+        "operation": "execute",
+        "query": "INSERT INTO contacts (email, name, company, phone, created_at) VALUES ($1, $2, $3, $4, NOW())"
+      }
+    },
+    {
+      "id": "http-1",
+      "capsule": {
+        "id": "http",
+        "name": "HTTP Client",
+        "icon": "⊹"
+      },
+      "position": { "x": 1350, "y": 200 },
+      "config": {
+        "method": "POST",
+        "url": "https://api.hubapi.com/crm/v3/objects/contacts",
+        "headers": {
+          "Authorization": "Bearer ${HUBSPOT_TOKEN}",
+          "Content-Type": "application/json"
+        }
+      }
+    },
+    {
+      "id": "ai-chat-1",
+      "capsule": {
+        "id": "ai-chat",
+        "name": "AI Chat",
+        "icon": "♞"
+      },
+      "position": { "x": 1600, "y": 200 },
+      "config": {
+        "provider": "openai",
+        "model": "gpt-4",
+        "prompt": "Analyze this contact and suggest next actions: ${contact_data}"
+      }
+    },
+    {
+      "id": "email-1",
+      "capsule": {
+        "id": "email",
+        "name": "Email",
+        "icon": "⌘"
+      },
+      "position": { "x": 1850, "y": 100 },
+      "config": {
+        "to": "${contact_email}",
+        "subject": "Welcome to our platform!",
+        "template": "welcome-email",
+        "provider": "sendgrid"
+      }
+    },
+    {
+      "id": "notifications-1",
+      "capsule": {
+        "id": "notifications",
+        "name": "Notifications",
+        "icon": "◆"
+      },
+      "position": { "x": 1850, "y": 300 },
+      "config": {
+        "channel": "slack",
+        "webhook_url": "${SLACK_WEBHOOK_URL}",
+        "message": "New contact added: ${contact_name} (${contact_email})"
+      }
+    },
+    {
+      "id": "logger-1",
+      "capsule": {
+        "id": "logger",
+        "name": "Logger",
+        "icon": "◉"
+      },
+      "position": { "x": 2100, "y": 200 },
+      "config": {
+        "level": "info",
+        "message": "CRM workflow completed for ${contact_email}",
+        "metadata": {
+          "workflow_id": "crm-agent-hubspot",
+          "timestamp": "${timestamp}"
+        }
+      }
+    }
+  ],
+  "connections": [
+    {
+      "id": "conn-1",
+      "from": { "nodeId": "webhook-1", "portId": "data" },
+      "to": { "nodeId": "validator-1", "portId": "input" }
+    },
+    {
+      "id": "conn-2",
+      "from": { "nodeId": "validator-1", "portId": "output" },
+      "to": { "nodeId": "database-1", "portId": "params" }
+    },
+    {
+      "id": "conn-3",
+      "from": { "nodeId": "database-1", "portId": "rows" },
+      "to": { "nodeId": "router-1", "portId": "data" }
+    },
+    {
+      "id": "conn-4",
+      "from": { "nodeId": "router-1", "portId": "true" },
+      "to": { "nodeId": "database-2", "portId": "params" }
+    },
+    {
+      "id": "conn-5",
+      "from": { "nodeId": "router-1", "portId": "false" },
+      "to": { "nodeId": "database-3", "portId": "params" }
+    },
+    {
+      "id": "conn-6",
+      "from": { "nodeId": "database-2", "portId": "data" },
+      "to": { "nodeId": "http-1", "portId": "body" }
+    },
+    {
+      "id": "conn-7",
+      "from": { "nodeId": "database-3", "portId": "data" },
+      "to": { "nodeId": "http-1", "portId": "body" }
+    },
+    {
+      "id": "conn-8",
+      "from": { "nodeId": "http-1", "portId": "data" },
+      "to": { "nodeId": "ai-chat-1", "portId": "context" }
+    },
+    {
+      "id": "conn-9",
+      "from": { "nodeId": "ai-chat-1", "portId": "response" },
+      "to": { "nodeId": "email-1", "portId": "data" }
+    },
+    {
+      "id": "conn-10",
+      "from": { "nodeId": "ai-chat-1", "portId": "response" },
+      "to": { "nodeId": "notifications-1", "portId": "data" }
+    },
+    {
+      "id": "conn-11",
+      "from": { "nodeId": "email-1", "portId": "success" },
+      "to": { "nodeId": "logger-1", "portId": "data" }
+    },
+    {
+      "id": "conn-12",
+      "from": { "nodeId": "notifications-1", "portId": "success" },
+      "to": { "nodeId": "logger-1", "portId": "metadata" }
+    }
+  ],
+  "variables": {
+    "HUBSPOT_TOKEN": {
+      "type": "secret",
+      "description": "HubSpot API access token"
+    },
+    "SLACK_WEBHOOK_URL": {
+      "type": "secret",
+      "description": "Slack webhook URL for notifications"
+    },
+    "DATABASE_URL": {
+      "type": "secret",
+      "description": "PostgreSQL database connection string"
+    },
+    "OPENAI_API_KEY": {
+      "type": "secret",
+      "description": "OpenAI API key for AI features"
+    },
+    "SENDGRID_API_KEY": {
+      "type": "secret",
+      "description": "SendGrid API key for email sending"
+    }
+  }
+}

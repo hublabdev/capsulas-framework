@@ -1,8 +1,8 @@
 {
   "name": "capsulas-framework",
-  "version": "0.1.0",
-  "description": "The WordPress of Apps - Build production-ready applications visually in minutes",
-  "private": true,
+  "version": "1.0.0",
+  "description": "The WordPress of Apps - Build production-ready applications visually in minutes. Complete visual development framework with 32 capsules for auth, databases, AI, payments, and more.",
+  "private": false,
   "workspaces": [
     "packages/*"
   ],

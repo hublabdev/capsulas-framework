@@ -1,7 +1,7 @@
 {
   "name": "capsulas-framework",
-  "version": "2.0.2",
-  "description": "Production-ready modular JavaScript library with 13 essential capsules: Payments, State, Router, Form-Builder, Theme, OAuth, i18n, Geolocation, Database, Analytics, Notifications, Storage, and WebSocket",
+  "version": "3.0.0",
+  "description": "The WordPress of Apps - Complete visual development framework with 32 production-ready capsules including Auth (JWT, OAuth, Google), AI Chat, Database, Payments, Email, and more. Build apps visually in minutes.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "module": "dist/index.js",
@@ -20,30 +20,39 @@
   "keywords": [
     "capsulas",
     "capsules",
-    "modules",
+    "visual-programming",
+    "low-code",
+    "no-code",
+    "workflow",
+    "automation",
     "framework",
     "typescript",
     "javascript",
+    "auth",
+    "jwt",
+    "oauth",
+    "google-oauth",
+    "database",
+    "postgresql",
+    "ai",
+    "openai",
+    "gpt",
     "payments",
     "stripe",
-    "paypal",
-    "oauth",
-    "authentication",
-    "state-management",
-    "routing",
+    "email",
+    "sendgrid",
+    "http-client",
+    "websocket",
+    "markdown",
     "forms",
-    "theming",
-    "i18n",
-    "internationalization",
-    "geolocation",
-    "modular",
-    "microservices"
+    "n8n-alternative",
+    "zapier-alternative"
   ],
-  "author": "Capsulas Contributors",
+  "author": "HubLab <info@hublab.dev>",
   "license": "MIT",
-  "homepage": "https://github.com/capsulas/capsulas-framework#readme",
+  "homepage": "https://hublab.dev",
   "bugs": {
-    "url": "https://github.com/capsulas/capsulas-framework/issues"
+    "url": "https://github.com/hublabdev/capsulas-framework/issues"
   },
   "dependencies": {
     "tslib": "^2.6.0"
@@ -61,7 +70,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/capsulas/capsulas-framework.git",
+    "url": "https://github.com/hublabdev/capsulas-framework.git",
     "directory": "packages/capsules"
   },
   "engines": {
